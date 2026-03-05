@@ -50,6 +50,11 @@
                             <strong>Difficulty:</strong> <span class="badge bg-{% if recipe.difficulty == 'Easy' %}success{% elif recipe.difficulty == 'Medium' %}warning{% else %}danger{% endif %}">{{ recipe.difficulty }}</span>
                         </small>
                     </div>
+                    <div class="mb-2">
+                        <small class="text-muted">
+                            <strong>Cuisine:</strong> {{ recipe.cuisine }}
+                        </small>
+                    </div>
                     {% if recipe.tags %}
                     <div class="mb-2">
                         {% for tag in recipe.tags %}
