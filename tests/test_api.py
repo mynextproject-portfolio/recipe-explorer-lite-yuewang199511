@@ -35,8 +35,12 @@ def test_create_and_get_recipe(client, clean_storage, sample_recipe_data):
     recipe = create_response.json()
     assert "id" in recipe
     assert "title" in recipe
+    assert "cuisine" in recipe
+    assert "instructions" in recipe
     assert "created_at" in recipe
     assert recipe["title"] == sample_recipe_data["title"]
+    assert recipe["cuisine"] == sample_recipe_data["cuisine"]
+    assert isinstance(recipe["instructions"], list)
     
     # Get recipe
     get_response = client.get(f"/api/recipes/{recipe['id']}")
@@ -67,3 +71,33 @@ def test_recipe_pages_load(client, clean_storage, sample_recipe_data):
     # Test import page
     response = client.get("/import")
     assert response.status_code == 200
+
+
+def test_create_recipe_requires_cuisine(client, clean_storage, sample_recipe_data):
+    """Validation test: cuisine is required in create payload."""
+    invalid_payload = dict(sample_recipe_data)
+    invalid_payload.pop("cuisine")
+
+    response = client.post("/api/recipes", json=invalid_payload)
+
+    assert response.status_code == 422
+
+
+def test_create_recipe_requires_non_empty_instruction_steps(client, clean_storage, sample_recipe_data):
+    """Validation test: instructions list cannot be empty."""
+    invalid_payload = dict(sample_recipe_data)
+    invalid_payload["instructions"] = []
+
+    response = client.post("/api/recipes", json=invalid_payload)
+
+    assert response.status_code == 422
+
+
+def test_create_recipe_requires_non_empty_ingredients(client, clean_storage, sample_recipe_data):
+    """Validation test: ingredients list cannot be empty."""
+    invalid_payload = dict(sample_recipe_data)
+    invalid_payload["ingredients"] = []
+
+    response = client.post("/api/recipes", json=invalid_payload)
+
+    assert response.status_code == 422

@@ -64,6 +64,16 @@ class RecipeStorage:
                     recipe_dict['created_at'] = datetime.fromisoformat(recipe_dict['created_at'])
                 if 'updated_at' in recipe_dict:
                     recipe_dict['updated_at'] = datetime.fromisoformat(recipe_dict['updated_at'])
+
+                # Backward compatibility for old imports that stored instructions as one text block.
+                instructions = recipe_dict.get('instructions', [])
+                if isinstance(instructions, str):
+                    recipe_dict['instructions'] = [
+                        step.strip() for step in instructions.split('\n') if step.strip()
+                    ]
+
+                if 'cuisine' not in recipe_dict or not isinstance(recipe_dict['cuisine'], str):
+                    recipe_dict['cuisine'] = ""
                 
                 recipe = Recipe(**recipe_dict)
                 self.recipes[recipe.id] = recipe

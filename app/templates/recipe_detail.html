@@ -22,6 +22,13 @@
                 <h6>Difficulty Level</h6>
                 <span class="badge bg-{% if recipe.difficulty == 'Easy' %}success{% elif recipe.difficulty == 'Medium' %}warning{% else %}danger{% endif %} fs-6">{{ recipe.difficulty }}</span>
             </div>
+            <div class="col-md-6">
+                <h6>Cuisine</h6>
+                <span class="badge bg-info text-dark fs-6">{{ recipe.cuisine }}</span>
+            </div>
+        </div>
+
+        <div class="row mb-4">
             {% if recipe.tags %}
             <div class="col-md-6">
                 <h6>Tags</h6>
@@ -51,7 +58,11 @@
             <h3>Instructions</h3>
             <div class="card">
                 <div class="card-body">
-                    <p class="card-text" style="white-space: pre-line;">{{ recipe.instructions }}</p>
+                    <ol class="mb-0">
+                        {% for step in recipe.instructions %}
+                        <li class="mb-2">{{ step }}</li>
+                        {% endfor %}
+                    </ol>
                 </div>
             </div>
         </div>
